@@ -29,14 +29,14 @@ export default class PostList extends React.Component {
                             <p>Post id: {post._id} </p>
                             <p>
                                 Post title: {post.title}, Post Description:{' '}
-                                {post.description}{' '}
+                                {post.description}
                             </p>
+                            <div>Views: {post.views}</div>
                             <button
                                 onClick={() => {
                                     history.push('/posts/edit/' + post._id);
                                 }}
                             >
-                                {' '}
                                 Edit post
                             </button>
                         </Link>

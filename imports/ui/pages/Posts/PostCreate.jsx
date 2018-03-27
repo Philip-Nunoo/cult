@@ -7,9 +7,9 @@ import {
     ErrorsField
 } from 'uniforms-unstyled';
 import PostSchema from '/db/posts/schema';
-import SimpleSchema2Bridge from 'uniforms/SimpleSchema2Bridge';
-
-export const SchemaBridge = new SimpleSchema2Bridge(PostSchema);
+// import SimpleSchema2Bridge from 'uniforms/SimpleSchema2Bridge';
+//
+// export const SchemaBridge = new SimpleSchema2Bridge(PostSchema);
 
 export default class PostCreate extends React.Component {
     constructor() {
@@ -30,7 +30,7 @@ export default class PostCreate extends React.Component {
 
         return (
             <div className="post">
-                <AutoForm onSubmit={this.submit} schema={SchemaBridge}>
+                <AutoForm onSubmit={this.submit} schema={PostSchema}>
                     <AutoField name="title" />
                     <LongTextField name="description" />
                     <AutoField name="type" />

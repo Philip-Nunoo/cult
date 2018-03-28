@@ -1,18 +1,33 @@
-import { Posts, Comments } from '/db';
+import { Posts, Comments, Users } from '/db';
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 
-Meteor.publish('posts', function() {
-    return Posts.find();
+Meteor.publishComposite('posts', function() {
+    return {
+        find: () => Posts.find(),
+        children: [
+            { find: post => Users.find({ _id: post.userId }) },
+            { find: post => Comments.find({ postId: post._id }) }
+        ]
+    };
 });
 
-Meteor.publish('post', function(postId) {
+Meteor.publishComposite('post', function(postId) {
     check(postId, String);
 
-    return postId
-        ? [
-              Posts.find({ _id: postId }),
-              Comments.find({ postId: postId }, { sort: { createdAt: -1 } })
-          ]
-        : null;
+    return {
+        find: () => Posts.find({ _id: postId }),
+        children: [
+            { find: post => Users.find({ _id: post.userId }) },
+            {
+                find: post => Comments.find({ postId: post._id }),
+                children: [
+                    {
+                        find: comment =>
+                            Meteor.users.find({ _id: comment.userId })
+                    }
+                ]
+            }
+        ]
+    };
 });

@@ -11,7 +11,7 @@ const PostComments = ({ post, comments, currentUser, removeComment }) => {
             {comments.map((comment, idx) => (
                 <div key={comment._id}>
                     <p>{comment.text}</p>
-                    <strong>Created By: {comment.userId}</strong>
+                    <strong>Created By: {comment.author._id}</strong>
                     {renderButton(comment, currentUser) && (
                         <button onClick={() => removeComment(comment._id)}>
                             x
@@ -30,10 +30,6 @@ PostComments.propTypes = {
             text: PropTypes.string.isRequired
         })
     ).isRequired,
-    post: PropTypes.shape({
-        _id: PropTypes.string.isRequired,
-        userId: PropTypes.string.isRequired
-    }),
     currentUser: PropTypes.string,
     removeComment: PropTypes.func.isRequired
 };

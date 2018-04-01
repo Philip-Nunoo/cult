@@ -2,96 +2,76 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Route, Link, MemoryRouter } from 'react-router-dom';
+import styled from 'styled-components';
+import { withQuery } from 'meteor/cultofcoders:grapher-react';
 import { Posts, Users, Comments } from '/db';
+import query from '/imports/api/posts/query/postList';
 
-class PostList extends React.Component {
-    constructor() {
-        super();
+const PostsContent = styled.div`
+    grid-column-start: 3;
+`;
+
+const PostItem = styled(Link)`
+    text-decoration: none;
+    display: block;
+    color: #000;
+    background-color: #fff;
+    padding: 1.5em;
+    margin: 1em 0em;
+    box-shadow: 1px 1px 3px;
+`;
+
+const PostTitle = styled.h1`
+    margin-top: 0px;
+`;
+
+const PostList = ({ history, data: posts, isLoading, error }) => {
+    if (isLoading) {
+        return <div>Loading....</div>;
     }
 
-    render() {
-        const { posts, history, comments, users, loading } = this.props;
-
-        if (loading) {
-            return <div>Loading....</div>;
-        }
-
-        const getComments = id =>
-            comments.filter(({ postId }) => postId === id);
-
-        const getUserEmail = userId =>
-            users.find(({ _id }) => _id === userId).emails[0].address;
-
-        return (
-            <div className="post">
-                {posts.map(post => {
-                    return (
-                        <Link to={`/posts/view/${post._id}`} key={post._id}>
-                            <p>Post id: {post._id}</p>
-                            <p>Post title: {post.title}</p>
-                            <p>Post Description: {post.description}</p>
-                            <div>
-                                Views: {post.views} comments:{' '}
-                                {getComments(post._id).length} created By:{' '}
-                                {getUserEmail(post.userId)}
-                            </div>
-                            <button
-                                onClick={() => {
-                                    history.push('/posts/edit/' + post._id);
-                                }}
-                            >
-                                Edit post
-                            </button>
-                        </Link>
-                    );
-                })}
-                <button onClick={() => history.push('/posts/create')}>
-                    Create a new post
-                </button>
-            </div>
-        );
+    if (error) {
+        return <div>Error: {error.reason}</div>;
     }
-}
+
+    return (
+        <PostsContent>
+            {posts.map(post => {
+                return (
+                    <PostItem to={`/posts/view/${post._id}`} key={post._id}>
+                        <PostTitle>{post.title}</PostTitle>
+                        {post.views} views {post.comments.length} comments
+                    </PostItem>
+                );
+            })}
+            <button onClick={() => history.push('/posts/create')}>
+                Create a new post
+            </button>
+        </PostsContent>
+    );
+};
 
 PostList.propTypes = {
-    posts: PropTypes.arrayOf(
+    data: PropTypes.arrayOf(
         PropTypes.shape({
             _id: PropTypes.string.isRequired,
             title: PropTypes.string,
-            description: PropTypes.string,
-            userId: PropTypes.string.isRequired
-        })
-    ).isRequired,
-    users: PropTypes.arrayOf(
-        PropTypes.shape({
-            _id: PropTypes.string.isRequired,
-            emails: PropTypes.arrayOf(
+            author: PropTypes.shape({
+                _id: PropTypes.string.isRequired,
+                emails: PropTypes.arrayOf(
+                    PropTypes.shape({
+                        address: PropTypes.string.isRequired
+                    })
+                )
+            }).isRequired,
+            comments: PropTypes.arrayOf(
                 PropTypes.shape({
-                    address: PropTypes.string.isRequired
+                    _id: PropTypes.string.isRequired,
+                    userId: PropTypes.string.isRequired
                 })
-            )
-        })
-    ).isRequired,
-    comments: PropTypes.arrayOf(
-        PropTypes.shape({
-            _id: PropTypes.string.isRequired,
-            userId: PropTypes.string.isRequired,
-            postId: PropTypes.string.isRequired
+            ).isRequired
         })
     ).isRequired
 };
 
-export default withTracker(props => {
-    const handle = Meteor.subscribe('posts');
-
-    return {
-        loading: !handle.ready(),
-        posts: Posts.find().fetch(),
-        users: Users.find({}, { fields: { emails: 1 } }).fetch(),
-        comments: Comments.find(
-            {},
-            { fields: { createdAt: 1, userId: 1, postId: 1 } }
-        ).fetch(),
-        ...props
-    };
-})(PostList);
+export default withQuery(() => query.clone(), { reactive: true })(PostList);

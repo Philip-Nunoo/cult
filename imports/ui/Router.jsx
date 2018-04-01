@@ -7,12 +7,14 @@ import PostEdit from './pages/Posts/PostEdit';
 import PostView from './pages/Posts/PostView';
 import PostList from './pages/Posts/PostList';
 import PostListReactive from './pages/Posts/PostListReactive';
+import { GrapherLive } from 'meteor/cultofcoders:grapher-live';
 
 import Register from './pages/Users/Register';
 import Login from './pages/Users/Login';
 
 export default () => (
     <App>
+        <Route exact path="/grapher" component={GrapherLive} />
         <Route exact path="/" component={Home} />
         <Route exact path="/posts" component={PostList} />
         <Route exact path="/posts/reactive" component={PostListReactive} />

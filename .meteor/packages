@@ -23,3 +23,6 @@ aldeed:collection2-core
 react-meteor-data
 alanning:roles
 reywood:publish-composite
+cultofcoders:grapher
+cultofcoders:grapher-react
+cultofcoders:grapher-live

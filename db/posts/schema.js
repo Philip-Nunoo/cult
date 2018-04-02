@@ -1,4 +1,5 @@
 import SimplSchema from 'simpl-schema';
+import PostTypesEnum from './enums/types';
 
 export default new SimplSchema({
     title: String,
@@ -14,15 +15,8 @@ export default new SimplSchema({
     },
     type: {
         type: String,
-        defaultValue: 'Nature',
-        allowedValues: [
-            'Nature',
-            'Psychology',
-            'Music',
-            'Programming',
-            'Project',
-            'Other'
-        ]
+        defaultValue: 'nature',
+        allowedValues: _.values(PostTypesEnum)
     },
     createdAt: {
         type: Date,

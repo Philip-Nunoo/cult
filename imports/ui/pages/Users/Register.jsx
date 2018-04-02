@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
-import { AutoForm, AutoField, ErrorsField } from 'uniforms-unstyled';
+import { Button, Col, Row, Icon, notification } from 'antd';
+import { AutoForm, AutoField, ErrorsField } from 'uniforms-antd';
 import SimpleSchema from 'simpl-schema';
 
 class Register extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
     }
 
     onSubmit = data => {
@@ -14,35 +15,82 @@ class Register extends Component {
             if (!err) {
                 Meteor.loginWithPassword(data.email, data.password, err => {
                     if (err) {
-                        return alert(err.reason);
+                        return notification.error({
+                            message: 'Error Registering',
+                            description: err.reason
+                        });
                     }
                     this.props.history.push('/posts');
                 });
             } else {
-                return alert(err.reason);
+                notification.error({
+                    message: 'Error Registering',
+                    description: err.reason
+                });
             }
         });
     };
 
     render() {
         return (
-            <div className="authentication">
-                <AutoForm schema={RegisterSchema} onSubmit={this.onSubmit}>
-                    <ErrorsField />
-                    <AutoField name="email" placeholder="Email" />
-                    <AutoField
-                        name="password"
-                        type="password"
-                        placeholder="Password *"
-                    />
-                    <AutoField
-                        name="confirm_password"
-                        type="password"
-                        placeholder="Confirm password"
-                    />
-                    <button type="submit">Create account</button>
-                </AutoForm>
-            </div>
+            <Row className="authentication">
+                <Col span={12} offset={6}>
+                    <AutoForm
+                        schema={RegisterSchema}
+                        onSubmit={this.onSubmit}
+                        style={{
+                            background: '#fff',
+                            padding: 24,
+                            marginBottom: 100,
+                            marginTop: 100
+                        }}
+                    >
+                        <ErrorsField />
+                        <AutoField
+                            prefix={
+                                <Icon
+                                    type="user"
+                                    style={{ color: 'rgba(0,0,0,.25)' }}
+                                />
+                            }
+                            name="email"
+                            placeholder="Email"
+                            label={false}
+                        />
+                        <AutoField
+                            prefix={
+                                <Icon
+                                    type="lock"
+                                    style={{ color: 'rgba(0,0,0,.25)' }}
+                                />
+                            }
+                            label={false}
+                            name="password"
+                            type="password"
+                            placeholder="Password *"
+                        />
+                        <AutoField
+                            prefix={
+                                <Icon
+                                    type="lock"
+                                    style={{ color: 'rgba(0,0,0,.25)' }}
+                                />
+                            }
+                            name="confirm_password"
+                            type="password"
+                            placeholder="Confirm password"
+                            label={false}
+                        />
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            style={{ width: '100%' }}
+                        >
+                            Create account
+                        </Button>
+                    </AutoForm>
+                </Col>
+            </Row>
         );
     }
 }

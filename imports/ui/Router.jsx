@@ -12,18 +12,23 @@ import { GrapherLive } from 'meteor/cultofcoders:grapher-live';
 import Register from './pages/Users/Register';
 import Login from './pages/Users/Login';
 
-const Routes = () => (
+const Routes = props => (
     <App>
-        <Route exact path="/grapher" component={GrapherLive} />
-        <Route exact path="/" component={Home} />
-        <Route exact path="/posts" component={PostList} />
-        <Route exact path="/posts/reactive" component={PostListReactive} />
-        <Route exact path="/posts/create" component={PostCreate} />
-        <Route exact path="/posts/edit/:_id" component={PostEdit} />
-        <Route exact path="/posts/view/:_id" component={PostView} />
+        <Route exact path="/grapher" component={GrapherLive} {...props} />
+        <Route exact path="/" component={Home} {...props} />
+        <Route exact path="/posts" component={PostList} {...props} />
+        <Route
+            exact
+            path="/posts/reactive"
+            component={PostListReactive}
+            {...props}
+        />
+        <Route exact path="/posts/create" component={PostCreate} {...props} />
+        <Route exact path="/posts/edit/:_id" component={PostEdit} {...props} />
+        <Route exact path="/posts/view/:_id" component={PostView} {...props} />
 
-        <Route exact path="/register" component={Register} />
-        <Route exact path="/login" component={Login} />
+        <Route exact path="/register" component={Register} {...props} />
+        <Route exact path="/login" component={Login} {...props} />
     </App>
 );
 

@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
+import { notification } from 'antd';
+import PropTypes from 'prop-types';
 import { withQuery } from 'meteor/cultofcoders:grapher-react';
 import styled from 'styled-components';
 import query from '/imports/api/posts/query/postComments.js';
 import { NewCommentForm, PostComments } from './../../components';
 
 const PostContent = styled.div`
-    grid-column-start: 3;
+    background: #fff;
+    padding: 24px;
+    min-height: 280px;
+    margin-bottom: 20px;
 `;
 
 class PostView extends Component {
@@ -25,16 +29,25 @@ class PostView extends Component {
     addNewComment(comment) {
         Meteor.call('comment.create', comment, err => {
             if (err) {
-                return alert(err.reason);
+                return notification.error({
+                    message: 'Error creating comment',
+                    description: err.reason
+                });
             }
-            alert('Comment added!');
+            notification.success({
+                message: 'Success',
+                description: 'Comment created'
+            });
         });
     }
 
     removeComment(commentId) {
         Meteor.call('comment.remove', commentId, err => {
             if (err) {
-                console.log(err.reason);
+                notification.error({
+                    message: 'Error creating comment',
+                    description: err.reason
+                });
             }
         });
     }
@@ -46,15 +59,18 @@ class PostView extends Component {
             return <div>Loading....</div>;
         }
 
-        const currentUser = Meteor.userId;
+        const currentUser = Meteor.userId();
 
         return (
-            <PostContent>
-                <h2>{post.title}</h2>
-                <p>{post.description}</p>
-                <div>
-                    Views: {post.views} Comments: {post.comments.length}
-                </div>
+            <div>
+                <PostContent>
+                    <h1>{post.title}</h1>
+                    <p>{post.description}</p>
+                    <div>
+                        Views: {post.views} Comments: {post.comments.length}
+                    </div>
+                </PostContent>
+
                 <NewCommentForm postId={post._id} submit={this.addNewComment} />
                 <PostComments
                     post={post}
@@ -62,7 +78,7 @@ class PostView extends Component {
                     currentUser={currentUser}
                     removeComment={this.removeComment}
                 />
-            </PostContent>
+            </div>
         );
     }
 }
@@ -78,10 +94,11 @@ PostView.propTypes = {
                 text: PropTypes.string
             })
         )
-    }).isRequired,
+    }),
     match: PropTypes.shape({
         params: PropTypes.shape({ _id: PropTypes.string.isRequired }).isRequired
     }).isRequired,
+    currentUser: PropTypes.string,
     isLoading: PropTypes.bool.isRequired
 };
 

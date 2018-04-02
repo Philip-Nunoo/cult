@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { AutoForm, LongTextField } from 'uniforms-unstyled';
+import { AutoForm, LongTextField } from 'uniforms-antd';
+import { Button } from 'antd';
 import CommentSchema from '/db/comments/schema';
 
 class NewCommentForm extends Component {
@@ -24,8 +25,15 @@ class NewCommentForm extends Component {
     }
 
     render() {
+        let formRef;
         return (
             <AutoForm
+                style={{
+                    backgroundColor: '#fff',
+                    padding: 24,
+                    marginBottom: 15
+                }}
+                ref={form => (formRef = form)}
                 onSubmit={comment => {
                     this.props.submit(comment);
                     this.setState({ commentModel: this.state.commentModel });
@@ -34,10 +42,9 @@ class NewCommentForm extends Component {
                 model={this.state.commentModel}
             >
                 <LongTextField name="text" />
-                <button type="submit">Add Comment</button>
-                <button onClick={() => history.push('/posts')}>
-                    Back to posts
-                </button>
+                <Button type="primary" onClick={() => formRef.submit()}>
+                    Add Comment
+                </Button>
             </AutoForm>
         );
     }

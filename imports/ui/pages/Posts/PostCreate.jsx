@@ -1,53 +1,53 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import PropTypes from 'prop-types';
-import {
-    AutoForm,
-    AutoField,
-    LongTextField,
-    ErrorsField
-} from 'uniforms-unstyled';
+import { Button, notification } from 'antd';
+import { AutoForm, AutoField, LongTextField, ErrorsField } from 'uniforms-antd';
 import PostSchema from '/db/posts/schema';
 
 class PostCreate extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
     }
 
     submit = post => {
         Meteor.call('post.create', post, err => {
             if (err) {
-                return alert(err.reason);
+                return notification.error({
+                    message: 'Error creating post',
+                    description: err.reason
+                });
             }
-            alert('Post added!');
+            notification.success({
+                message: 'Success',
+                description: 'Post created'
+            });
         });
     };
 
     render() {
-        const { history } = this.props;
-
+        let formRef;
         return (
-            <div className="post">
-                <AutoForm onSubmit={this.submit} schema={PostSchema}>
-                    <AutoField name="title" />
-                    <LongTextField name="description" />
-                    <AutoField name="type" />
+            <AutoForm
+                ref={form => (formRef = form)}
+                onSubmit={this.submit}
+                schema={PostSchema}
+                style={{
+                    backgroundColor: '#fff',
+                    padding: 24,
+                    marginBottom: 15
+                }}
+            >
+                <AutoField name="title" />
+                <LongTextField name="description" />
+                <AutoField name="type" />
 
-                    <ErrorsField />
-                    <button type="submit">Add post</button>
-                    <button onClick={history.push('/posts')}>
-                        Back to posts
-                    </button>
-                </AutoForm>
-            </div>
+                <ErrorsField />
+                <Button type="primary" onClick={() => formRef.submit()}>
+                    Add post
+                </Button>
+            </AutoForm>
         );
     }
 }
-
-PostCreate.propTypes = {
-    history: PropTypes.shape({
-        push: PropTypes.func.isRequired
-    }).isRequired
-};
 
 export default PostCreate;

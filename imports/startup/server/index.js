@@ -8,3 +8,5 @@ import '/imports/api/grapher';
 import '/imports/api/grapher/exposures';
 
 import './grapher-live.js';
+
+import './fixtures';

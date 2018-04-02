@@ -7,6 +7,7 @@ import { AutoForm, AutoField, LongTextField, ErrorsField } from 'uniforms-antd';
 import styled from 'styled-components';
 import PostSchema from '/db/posts/schema';
 import query from '/imports/api/posts/query/postEdit';
+import { Loading } from './../../components';
 
 const PostContent = styled.div`
     background: #fff;
@@ -39,7 +40,7 @@ class PostEdit extends React.Component {
         const { data: post, isLoading } = this.props;
 
         if (isLoading) {
-            return <div>Loading....</div>;
+            return <Loading />;
         }
 
         return (

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { withQuery } from 'meteor/cultofcoders:grapher-react';
 import query from '/imports/api/posts/query/postList';
 import { List, Icon } from 'antd';
+import { Loading } from './../../components';
 
 const PostsContent = styled.div`
     background: #fff;
@@ -25,7 +26,7 @@ IconText.propTypes = {
 
 const PostList = ({ data: posts, isLoading, history, error }) => {
     if (isLoading) {
-        return <div>Loading....</div>;
+        return <Loading />;
     }
 
     if (error) {

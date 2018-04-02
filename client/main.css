@@ -5,4 +5,10 @@ body {
     font-size: 14px;
     color: rgba(0, 0, 0, 0.87);
     margin: 0px;
+    min-height: 100vh;
+}
+
+#app,
+#app > div {
+    min-height: 100vh;
 }

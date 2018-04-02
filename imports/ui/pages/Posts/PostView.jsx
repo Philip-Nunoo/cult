@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { withQuery } from 'meteor/cultofcoders:grapher-react';
 import styled from 'styled-components';
 import query from '/imports/api/posts/query/postComments.js';
-import { NewCommentForm, PostComments } from './../../components';
+import { NewCommentForm, PostComments, Loading } from './../../components';
 
 const PostContent = styled.div`
     background: #fff;
@@ -56,7 +56,7 @@ class PostView extends Component {
         const { data: post, isLoading } = this.props;
 
         if (isLoading) {
-            return <div>Loading....</div>;
+            return <Loading />;
         }
 
         const currentUser = Meteor.userId();

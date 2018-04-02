@@ -31,7 +31,7 @@ module.exports = {
             2,
             {
                 ignoreRefs: false,
-                allowArrowFunctions: false,
+                allowArrowFunctions: true,
                 allowFunctions: false,
                 allowBind: false
             }

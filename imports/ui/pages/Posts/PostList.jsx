@@ -1,29 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { withQuery } from 'meteor/cultofcoders:grapher-react';
 import query from '/imports/api/posts/query/postList';
+import { List, Icon } from 'antd';
 
 const PostsContent = styled.div`
-    grid-column-start: 3;
+    background: #fff;
+    padding: 24px;
+    min-height: 280px;
 `;
 
-const PostItem = styled(Link)`
-    text-decoration: none;
-    display: block;
-    color: #000;
-    background-color: #fff;
-    padding: 1.5em;
-    margin: 1em 0em;
-    box-shadow: 1px 1px 3px;
-`;
+const IconText = ({ type, text }) => (
+    <span>
+        <Icon type={type} style={{ marginRight: 8 }} />
+        {text}
+    </span>
+);
 
-const PostTitle = styled.h1`
-    margin-top: 0px;
-`;
+IconText.propTypes = {
+    type: PropTypes.string.isRequired,
+    text: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+};
 
-const PostList = ({ history, data: posts, isLoading, error }) => {
+const PostList = ({ data: posts, isLoading, history, error }) => {
     if (isLoading) {
         return <div>Loading....</div>;
     }
@@ -32,19 +32,48 @@ const PostList = ({ history, data: posts, isLoading, error }) => {
         return <div>Error: {error.reason}</div>;
     }
 
+    const pagination = {
+        pageSize: 10,
+        current: 1,
+        total: posts.length,
+        onChange: () => {}
+    };
+
+    const getSumary = text => {
+        const rgxwords = new RegExp('([^ ]*[ ]{0,1}){1,' + 20 + '}', 'g');
+        text = text.replace(/\s\s+/g, ' '); // replace multiple whitespaces whit single space
+        return `${text.match(rgxwords)[0]} ...`;
+    };
+
+    const renderPost = post => (
+        <List.Item
+            key={post._id}
+            actions={[
+                <IconText key="video-camera" type="like-o" text={post.views} />,
+                <IconText
+                    key="comments"
+                    type="message"
+                    text={post.comments.length}
+                />
+            ]}
+            onClick={() => history.push(`/posts/view/${post._id}`)}
+        >
+            <List.Item.Meta
+                title={post.title}
+                description={getSumary(post.description)}
+            />
+        </List.Item>
+    );
+
     return (
         <PostsContent>
-            <button onClick={history.push('/posts/create')}>
-                Create a new post
-            </button>
-            {posts.map(post => {
-                return (
-                    <PostItem to={`/posts/view/${post._id}`} key={post._id}>
-                        <PostTitle>{post.title}</PostTitle>
-                        {post.views} views {post.comments.length} comments
-                    </PostItem>
-                );
-            })}
+            <List
+                itemLayout="vertical"
+                size="large"
+                pagination={pagination}
+                dataSource={posts}
+                renderItem={renderPost}
+            />
         </PostsContent>
     );
 };
@@ -68,11 +97,11 @@ PostList.propTypes = {
             ).isRequired
         })
     ).isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    error: PropTypes.shape({ reason: PropTypes.string }),
     history: PropTypes.shape({
         push: PropTypes.func.isRequired
-    }).isRequired,
-    isLoading: PropTypes.bool.isRequired,
-    error: PropTypes.shape({ reason: PropTypes.string })
+    }).isRequired
 };
 
 export default withQuery(() => query.clone(), { reactive: true })(PostList);

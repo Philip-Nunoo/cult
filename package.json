@@ -1,28 +1,45 @@
 {
-  "name": "meteor-tuts",
-  "private": true,
-  "scripts": {
-    "start": "meteor run"
-  },
-  "dependencies": {
-    "@babel/runtime": "^7.0.0-beta.36",
-    "bcrypt": "^1.0.3",
-    "brace": "^0.11.1",
-    "classnames": "^2.2.5",
-    "history": "^4.7.2",
-    "meteor-node-stubs": "^0.3.2",
-    "moment": "^2.20.1",
-    "prop-types": "^15.6.1",
-    "react": "^16.2.0",
-    "react-ace": "^5.10.0",
-    "react-css-grid": "^2.0.0-0",
-    "react-dom": "^16.2.0",
-    "react-router": "^4.2.0",
-    "react-router-dom": "^4.2.2",
-    "sift": "^5.1.0",
-    "simpl-schema": "^1.4.2",
-    "styled-components": "^3.2.3",
-    "uniforms": "^1.23.0",
-    "uniforms-unstyled": "^1.23.0"
-  }
+    "name": "meteor-tuts",
+    "private": true,
+    "scripts": {
+        "start": "meteor run",
+        "lint": "eslint . --ext .jsx --fix"
+    },
+    "lint-staged": {
+        "*.js": "eslint --fix",
+        "*.jsx": "eslint --fix"
+    },
+    "pre-commit": "lint-staged",
+    "dependencies": {
+        "@babel/runtime": "^7.0.0-beta.36",
+        "bcrypt": "^1.0.3",
+        "brace": "^0.11.1",
+        "classnames": "^2.2.5",
+        "faker": "^4.1.0",
+        "history": "^4.7.2",
+        "meteor-node-stubs": "^0.3.2",
+        "moment": "^2.20.1",
+        "prop-types": "^15.6.1",
+        "react": "^16.2.0",
+        "react-ace": "^5.10.0",
+        "react-css-grid": "^2.0.0-0",
+        "react-dom": "^16.2.0",
+        "react-router": "^4.2.0",
+        "react-router-dom": "^4.2.2",
+        "sift": "^5.1.0",
+        "simpl-schema": "^1.4.2",
+        "styled-components": "^3.2.3",
+        "uniforms": "^1.23.0",
+        "uniforms-unstyled": "^1.23.0"
+    },
+    "devDependencies": {
+        "babel-eslint": "^8.2.2",
+        "eslint": "^4.19.1",
+        "eslint-import-resolver-meteor": "^0.4.0",
+        "eslint-plugin-import": "^2.10.0",
+        "eslint-plugin-meteor": "^4.2.0",
+        "eslint-plugin-react": "^7.7.0",
+        "lint-staged": "^7.0.2",
+        "pre-commit": "^1.2.2"
+    }
 }

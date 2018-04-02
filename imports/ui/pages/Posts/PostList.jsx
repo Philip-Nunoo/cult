@@ -36,6 +36,9 @@ const PostList = ({ history, data: posts, isLoading, error }) => {
 
     return (
         <PostsContent>
+            <button onClick={() => history.push('/posts/create')}>
+                Create a new post
+            </button>
             {posts.map(post => {
                 return (
                     <PostItem to={`/posts/view/${post._id}`} key={post._id}>
@@ -44,9 +47,6 @@ const PostList = ({ history, data: posts, isLoading, error }) => {
                     </PostItem>
                 );
             })}
-            <button onClick={() => history.push('/posts/create')}>
-                Create a new post
-            </button>
         </PostsContent>
     );
 };

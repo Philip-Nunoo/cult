@@ -1,4 +1,6 @@
 import React from 'react';
+import { Meteor } from 'meteor/meteor';
+import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Posts } from '/db';
 
@@ -25,22 +27,32 @@ class PostListReactive extends React.Component {
                                 {post.description}{' '}
                             </p>
                             <button
-                                onClick={() => {
-                                    history.push('/posts/edit/' + post._id);
-                                }}
+                                onClick={history.push(
+                                    `/posts/edit/${post._id}`
+                                )}
                             >
                                 Edit post
                             </button>
                         </div>
                     );
                 })}
-                <button onClick={() => history.push('/posts/create')}>
+                <button onClick={history.push('/posts/create')}>
                     Create a new post
                 </button>
             </div>
         );
     }
 }
+
+PostListReactive.propTypes = {
+    posts: PropTypes.shape({
+        _id: PropTypes.string.isRequired,
+        title: PropTypes.string
+    }).isRequired,
+    history: PropTypes.shape({
+        push: PropTypes.func.isRequired
+    })
+};
 
 export default withTracker(props => {
     const handle = Meteor.subscribe('posts');

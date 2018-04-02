@@ -1,4 +1,6 @@
 import React from 'react';
+import Meteor from 'meteor/meteor';
+import PropTypes from 'prop-types';
 import {
     AutoForm,
     AutoField,
@@ -7,7 +9,7 @@ import {
 } from 'uniforms-unstyled';
 import PostSchema from '/db/posts/schema';
 
-export default class PostEdit extends React.Component {
+class PostEdit extends React.Component {
     constructor() {
         super();
         this.state = { post: null };
@@ -49,7 +51,7 @@ export default class PostEdit extends React.Component {
 
                     <ErrorsField />
                     <button type="submit">Edit post</button>
-                    <button onClick={() => history.push('/posts')}>
+                    <button onClick={history.push('/posts')}>
                         Back to posts
                     </button>
                 </AutoForm>
@@ -57,3 +59,14 @@ export default class PostEdit extends React.Component {
         );
     }
 }
+
+PostEdit.propTypes = {
+    match: PropTypes.shape({
+        params: PropTypes.shape({ _id: PropTypes.string.isRequired })
+    }).isRequired,
+    history: PropTypes.shape({
+        push: PropTypes.func.isRequired
+    }).isRequired
+};
+
+export default PostEdit;

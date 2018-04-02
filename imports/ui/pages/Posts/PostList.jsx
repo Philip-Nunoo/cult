@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withTracker } from 'meteor/react-meteor-data';
-import { Route, Link, MemoryRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { withQuery } from 'meteor/cultofcoders:grapher-react';
-import { Posts, Users, Comments } from '/db';
 import query from '/imports/api/posts/query/postList';
 
 const PostsContent = styled.div`
@@ -36,7 +34,7 @@ const PostList = ({ history, data: posts, isLoading, error }) => {
 
     return (
         <PostsContent>
-            <button onClick={() => history.push('/posts/create')}>
+            <button onClick={history.push('/posts/create')}>
                 Create a new post
             </button>
             {posts.map(post => {
@@ -59,9 +57,7 @@ PostList.propTypes = {
             author: PropTypes.shape({
                 _id: PropTypes.string.isRequired,
                 emails: PropTypes.arrayOf(
-                    PropTypes.shape({
-                        address: PropTypes.string.isRequired
-                    })
+                    PropTypes.shape({ address: PropTypes.string.isRequired })
                 )
             }).isRequired,
             comments: PropTypes.arrayOf(
@@ -71,7 +67,12 @@ PostList.propTypes = {
                 })
             ).isRequired
         })
-    ).isRequired
+    ).isRequired,
+    history: PropTypes.shape({
+        push: PropTypes.func.isRequired
+    }).isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    error: PropTypes.shape({ reason: PropTypes.string })
 };
 
 export default withQuery(() => query.clone(), { reactive: true })(PostList);

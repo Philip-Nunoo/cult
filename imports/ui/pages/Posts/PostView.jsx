@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
 import { withQuery } from 'meteor/cultofcoders:grapher-react';
-import { withTracker } from 'meteor/react-meteor-data';
-import { Posts, Comments } from '/db';
 import styled from 'styled-components';
 import query from '/imports/api/posts/query/postComments.js';
 import { NewCommentForm, PostComments } from './../../components';
@@ -42,13 +40,13 @@ class PostView extends Component {
     }
 
     render() {
-        const { data: post, currentUser, isLoading } = this.props;
+        const { data: post, isLoading } = this.props;
 
         if (isLoading) {
             return <div>Loading....</div>;
         }
 
-        console.log(post);
+        const currentUser = Meteor.userId;
 
         return (
             <PostContent>
@@ -69,10 +67,8 @@ class PostView extends Component {
     }
 }
 
-PostView.displayName = 'PostView';
-
-PostView.defaultProps = {
-    post: PropTypes.shape({
+PostView.propTypes = {
+    data: PropTypes.shape({
         title: PropTypes.string.isRequired,
         description: PropTypes.string.isRequired,
         views: PropTypes.number.isRequired,
@@ -82,7 +78,11 @@ PostView.defaultProps = {
                 text: PropTypes.string
             })
         )
-    }).isRequired
+    }).isRequired,
+    match: PropTypes.shape({
+        params: PropTypes.shape({ _id: PropTypes.string.isRequired }).isRequired
+    }).isRequired,
+    isLoading: PropTypes.bool.isRequired
 };
 
 export default withQuery(
@@ -92,15 +92,3 @@ export default withQuery(
         single: true
     }
 )(PostView);
-//
-// export default withTracker(props => {
-//     const _id = props.match.params._id;
-//     const handle = Meteor.subscribe('post', _id);
-//
-//     return {
-//         loading: !handle.ready(),
-//         post: Posts.findOne({ _id }),
-//         comments: Comments.find().fetch(),
-//         currentUser: Meteor.userId()
-//     };
-// })(PostView);

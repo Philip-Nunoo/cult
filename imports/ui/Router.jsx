@@ -12,7 +12,7 @@ import { GrapherLive } from 'meteor/cultofcoders:grapher-live';
 import Register from './pages/Users/Register';
 import Login from './pages/Users/Login';
 
-export default () => (
+const Routes = () => (
     <App>
         <Route exact path="/grapher" component={GrapherLive} />
         <Route exact path="/" component={Home} />
@@ -26,3 +26,5 @@ export default () => (
         <Route exact path="/login" component={Login} />
     </App>
 );
+
+export default Routes;

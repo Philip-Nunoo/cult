@@ -1,17 +1,15 @@
 import React from 'react';
+import { Meteor } from 'meteor/meteor';
+import PropTypes from 'prop-types';
 import {
     AutoForm,
     AutoField,
     LongTextField,
-    SelectField,
     ErrorsField
 } from 'uniforms-unstyled';
 import PostSchema from '/db/posts/schema';
-// import SimpleSchema2Bridge from 'uniforms/SimpleSchema2Bridge';
-//
-// export const SchemaBridge = new SimpleSchema2Bridge(PostSchema);
 
-export default class PostCreate extends React.Component {
+class PostCreate extends React.Component {
     constructor() {
         super();
     }
@@ -37,7 +35,7 @@ export default class PostCreate extends React.Component {
 
                     <ErrorsField />
                     <button type="submit">Add post</button>
-                    <button onClick={() => history.push('/posts')}>
+                    <button onClick={history.push('/posts')}>
                         Back to posts
                     </button>
                 </AutoForm>
@@ -45,3 +43,11 @@ export default class PostCreate extends React.Component {
         );
     }
 }
+
+PostCreate.propTypes = {
+    history: PropTypes.shape({
+        push: PropTypes.func.isRequired
+    }).isRequired
+};
+
+export default PostCreate;

@@ -1,39 +1,26 @@
 import { Meteor } from 'meteor/meteor';
-import { Posts } from '/db';
 import Security from '/imports/api/security';
+import PostService from './services';
 
 Meteor.methods({
     'post.create'(post) {
         Security.checkLoggedIn(this.userId);
-        post.userId = this.userId;
-        Posts.insert({ ...post, createdAt: new Date() });
-    },
-
-    'post.list'() {
-        return Posts.find().fetch();
+        return PostService.createPost({ ...post, userId: this.userId });
     },
 
     'post.edit'(_id, postData) {
-        Posts.update(
-            { _id: _id, userId: this.userId },
-            {
-                $set: {
-                    title: postData.title,
-                    description: postData.description
-                }
-            }
-        );
+        return PostService.editPost(_id, this.userId, postData);
     },
 
     'post.remove'(_id) {
-        Posts.remove({ _id: _id, userId: this.userId });
+        return PostService.removePost(_id, this.userId);
     },
 
     'post.get'(_id) {
-        return Posts.findOne(_id);
+        return PostService.getPost(_id);
     },
 
     'post.viewed'(_id) {
-        Posts.update({ _id }, { $inc: { views: 1 } });
+        return PostService.viewedPost(_id);
     }
 });

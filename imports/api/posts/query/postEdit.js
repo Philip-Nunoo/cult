@@ -9,6 +9,7 @@ export default createQuery({
         description: 1,
         views: 1,
         userId: 1,
+        type: 1,
         author: {
             emails: 1
         },

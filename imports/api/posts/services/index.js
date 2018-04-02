@@ -1,28 +1,37 @@
 import { Posts } from '/db';
-import Security from '/imports/api/security';
 
 class PostService {
-    static createPost(post) {
-        Security.checkLoggedIn(this.userId);
-        Posts.insert({ ...post, userId: this.userId, createdAt: new Date() });
+    static async createPost(post) {
+        const id = await Posts.insert({ ...post, createdAt: new Date() });
+
+        return { id };
     }
 
-    static editPost(_id, postData) {
-        Security.checkLoggedIn(this.userId);
-        Posts.update(
-            { _id: _id, userId: this.userId },
-            {
-                $set: {
-                    title: postData.title,
-                    description: postData.description
-                }
-            }
+    static async editPost(_id, userId, postData) {
+        const id = await Posts.update(
+            { _id, userId },
+            { $set: { ...postData } }
         );
+
+        return { id };
     }
 
-    static removePost(_id) {
-        Security.checkLoggedIn(this.userId);
-        Posts.remove({ _id: _id, userId: this.userId });
+    static async getPost(_id) {
+        const post = await Posts.findOne({ _id });
+
+        return post;
+    }
+
+    static async removePost(_id, userId) {
+        const id = await Posts.remove({ _id, userId });
+
+        return { id };
+    }
+
+    static async viewedPost(_id) {
+        const id = await Posts.update({ _id }, { $inc: { views: 1 } });
+
+        return { id };
     }
 }
 

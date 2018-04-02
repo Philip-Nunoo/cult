@@ -1,12 +1,15 @@
 import { Meteor } from 'meteor/meteor';
 import { Comments, Posts } from '/db';
+import CommentService from './services';
 import Security from '/imports/api/security';
 
 Meteor.methods({
     'comment.create'(comment) {
         Security.checkLoggedIn(this.userId);
-        comment.userId = this.userId;
-        Comments.insert({ ...comment, createdAt: new Date() });
+        return CommentService.createComment({
+            ...comment,
+            userId: this.userId
+        });
     },
     'comment.remove': async function(_id) {
         const comment = await Comments.findOne({ _id });
@@ -14,6 +17,6 @@ Meteor.methods({
 
         Security.isUserAllowedToDeleteComment(this.userId, comment, post);
 
-        Comments.remove({ _id });
+        return CommentService.removeComment(_id);
     }
 });
